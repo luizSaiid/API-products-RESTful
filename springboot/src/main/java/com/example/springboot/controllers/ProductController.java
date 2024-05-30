@@ -6,7 +6,6 @@ import com.example.springboot.repositories.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +36,7 @@ public class ProductController {
         if (!productList.isEmpty()){
             for (ProductModel product: productList){
                 UUID id = product.getIdProduct();
-                product.add(LinkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
+                product.add(linkTo(methodOn(ProductController.class).getOneProduct(id)).withSelfRel());
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(productList);
@@ -49,6 +48,7 @@ public class ProductController {
         if (product0.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
         }
+        product0.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Products list"));
         return ResponseEntity.status(HttpStatus.OK).body(product0.get());
     }
 
